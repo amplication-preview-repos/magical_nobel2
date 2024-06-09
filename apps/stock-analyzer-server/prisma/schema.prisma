@@ -1,0 +1,51 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Stock {
+  createdAt   DateTime     @default(now())
+  id          String       @id @default(cuid())
+  market      String?
+  name        String?
+  sector      String?
+  stockPrices StockPrice[]
+  symbolField String?
+  updatedAt   DateTime     @updatedAt
+}
+
+model StockPrice {
+  closePrice Float?
+  createdAt  DateTime  @default(now())
+  date       DateTime?
+  highPrice  Float?
+  id         String    @id @default(cuid())
+  lowPrice   Float?
+  openPrice  Float?
+  stock      Stock?    @relation(fields: [stockId], references: [id])
+  stockId    String?
+  updatedAt  DateTime  @updatedAt
+  volume     Int?
+}
+
+model Watchlist {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  createdAt DateTime @default(now())
+  email     String?  @unique
+  firstName String?
+  id        String   @id @default(cuid())
+  lastName  String?
+  password  String
+  roles     Json
+  updatedAt DateTime @updatedAt
+  username  String   @unique
+}
